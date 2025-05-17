@@ -1,6 +1,6 @@
 html,
 body {
-  touch-action: none;
+  touch-action: auto;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
@@ -24,6 +24,8 @@ body {
   #start-game-button {
     padding: 14px 10vw;
     font-size: 1.2em;
+    position: sticky;
+    bottom: 20px;
   }
   #info {
     font-size: 0.95em;
@@ -66,6 +68,14 @@ body {
   text-align: center;
   padding: 20px;
   overflow-y: auto;
+  touch-action: auto;
+}
+
+@media (max-height: 600px) {
+  #setup-overlay {
+    justify-content: flex-start;
+    padding-top: 40px;
+  }
 }
 #setup-overlay h1 {
   margin-bottom: 15px;
@@ -116,6 +126,8 @@ body {
   font-size: 1.1em;
   font-weight: bold;
   letter-spacing: 0.5px;
+  position: sticky;
+  bottom: 20px;
 }
 #start-game-button:hover {
   background-color: #5cb860;
