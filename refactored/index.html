@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>3D Voxel Chess - Defensive Support Lines</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Setup Overlay -->
+    <div id="setup-overlay">
+        <h1>3D Voxel Chess</h1>
+        <div class="setup-section"> <h2>Starting "Height" (Along UP Axis):</h2> <div id="height-setup"> <button class="setup-button height-button selected" data-setup="low">Floor (0)</button> <button class="setup-button height-button" data-setup="classic">Classic (W:0, B:Max)</button> <button class="setup-button height-button" data-setup="middle">Middle</button> <button class="setup-button height-button" data-setup="high">Ceiling (Max)</button> <button class="setup-button height-button" data-setup="random">Random</button> </div> </div>
+        <div class="setup-section"> <h2>"UP" Axis:</h2> <div id="axis-setup"> <button class="setup-button axis-button" data-axis="x">X</button> <button class="setup-button axis-button selected" data-axis="y">Y (Default)</button> <button class="setup-button axis-button" data-axis="z">Z</button> </div> </div>
+         <div class="setup-section"> <h2>Board Height (UP Axis Max):</h2> <input type="number" id="max-height-input" min="2" max="8" value="8" style="width: 50px; padding: 5px; font-size: 1em;"> (2-8) </div>
+        <div class="setup-section"> <h2>Opponent:</h2> <div id="opponent-select"> <input type="radio" id="opp-human" name="opponent" value="human" checked> <label for="opp-human">Human</label> <input type="radio" id="opp-ai-random" name="opponent" value="random"> <label for="opp-ai-random">AI (Random)</label> <input type="radio" id="opp-ai-greedy" name="opponent" value="greedy"> <label for="opp-ai-greedy">AI (Greedy)</label> </div> </div>
+        <div class="setup-section"> <h2>Options:</h2>
+            <div id="capture-highlight-select"> <input type="checkbox" id="highlight-captures" name="highlight-captures" checked> <label for="highlight-captures">Highlight Captures (Red)</label> </div>
+            <div style="margin-top:5px;"><label for="attack-mode" style="margin-right:5px;">Attack Lines (Selected):</label><select id="attack-mode" name="attack-mode" style="margin-left:2px;"><option value="none">Off</option><option value="captures" selected>Captures</option><option value="rays">Full Rays</option></select> </div>
+            <div style="margin-top:5px;"><input type="checkbox" id="show-support-lines" name="show-support-lines" checked> <label for="show-support-lines">Show Support Lines</label></div>
+            <div style="margin-top:5px;"><input type="checkbox" id="show-conflict-rays" name="show-conflict-rays" checked> <label for="show-conflict-rays">Show Conflict Rays</label></div>
+        </div>
+        <button id="start-game-button">Start Game</button>
+    </div>
+
+    <div id="container"></div>
+    <div id="info"> <div><span id="turn-label">Turn:</span> <span id="turn">White</span></div> <div>White Material: <span id="white-score">0</span></div> <div>Black Material: <span id="black-score">0</span></div> <div>Status: <span id="status">Waiting...</span></div> </div>
+    <script> document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});let lT=0;document.addEventListener('touchend',e=>{let n=(new Date()).getTime();if(n-lT<=300)e.preventDefault();lT=n;},false); </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/ai.js"></script>
+</body>
+</html>

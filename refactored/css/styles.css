@@ -1,0 +1,40 @@
+        html, body {
+            touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        @media (max-width: 600px) {
+            #setup-overlay h1 { font-size: 1.35em; }
+            #setup-overlay h2 { font-size: 1em; }
+            .setup-section { max-width: 98vw; }
+            .setup-button, #start-game-button { font-size: 1.1em; padding: 12px 10px; }
+            #start-game-button { padding: 14px 10vw; font-size: 1.2em; }
+            #info { font-size: 0.95em; min-width: 110px; padding: 7px 8px; }
+        }
+        @media (max-width: 400px) {
+            #setup-overlay h1 { font-size: 1em; }
+            #setup-overlay h2 { font-size: 0.9em; }
+            .setup-button, #start-game-button { font-size: 0.95em; padding: 10px 6px; }
+        }
+        body { margin: 0; overflow: hidden; font-family: sans-serif; background-color: #222; color: #fff; }
+        #setup-overlay { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; text-align: center; padding: 20px; }
+        #setup-overlay h1 { margin-bottom: 15px; color: #fff; font-weight: 300; letter-spacing: 1px; font-size: 2.5em; }
+        #setup-overlay h2 { margin-bottom: 10px; margin-top: 15px; color: #ccc; font-weight: 400; font-size: 1.1em;}
+        .setup-section { margin-bottom: 10px; width: 90%; max-width: 550px; }
+        .setup-button { background-color: #4a4a5a; color: #eee; border: 1px solid #666; padding: 9px 18px; margin: 5px; font-size: 0.95em; cursor: pointer; border-radius: 4px; transition: background-color 0.2s, border-color 0.2s; }
+        .setup-button:hover { background-color: #5a5a6a; border-color: #888; }
+        .setup-button.selected { background-color: #5a8cc0; border-color: #7ab8f0; }
+        #start-game-button { background-color: #4caf50; border: none; color: white; margin-top: 25px; padding: 15px 40px; font-size: 1.1em; font-weight: bold; letter-spacing: 0.5px; }
+        #start-game-button:hover { background-color: #5cb860; }
+        #opponent-select label, #capture-highlight-select label { margin: 0 10px 0 3px; font-size: 0.95em; color: #ccc;}
+        #opponent-select input, #capture-highlight-select input { vertical-align: middle; margin-right: 4px; }
+        #container { width: 100vw; height: 100vh; display: none; touch-action: none; }
+        #info { position: absolute; top: 15px; left: 15px; background: rgba(15, 20, 30, 0.85); padding: 12px 18px; border-radius: 8px; font-size: 1em; line-height: 1.6; display: none; z-index: 5; border: 1px solid rgba(100, 120, 150, 0.5); min-width: 160px; }
+        #info div { margin-bottom: 6px; }
+        #info span { font-weight: bold; }
+        #info #status.check, #info #status.checkmate { color: #ff8888; font-weight: bold; }
+        canvas { display: block; cursor: pointer; }
+        input, button { touch-action: manipulation; }
+    </style>
