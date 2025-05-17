@@ -5,13 +5,9 @@ A 3D 3-axis Chess game
 
 A unique, single-page HTML/JavaScript 3D chess variant played within a voxel cube, utilizing the Three.js library for rendering. This game explores chess-like strategy in three dimensions with customizable board setups and AI opponents.
 
-## Description
+This project implements a chess variant played on an 8x8xN grid within a 3D cube. Pieces move according to rules inspired by traditional chess but adapted for three-dimensional space ("Any Axis" movement). The game features selectable starting configurations, board height, UP axis orientation, and basic AI opponents. The original implementation was a single HTML file; a modular version is available in the `refactored/` directory.
 
-This project implements a chess variant played on an 8x8xN grid within a 3D cube. Pieces move according to rules inspired by traditional chess but adapted for three-dimensional space ("Any Axis" movement). The game features selectable starting configurations, board height, UP axis orientation, and basic AI opponents, all contained within a single HTML file.
-
-## Features
-
-*   **Single HTML File:** Entire game (HTML, CSS, JS) contained in one file.
+*   **Single HTML File:** Original monolithic version. A modular refactor exists in the `refactored/` folder.
 *   **3D Voxel Graphics:** Board and pieces rendered with a voxel aesthetic using Three.js (WebGL).
 *   **Customizable Board:**
     *   Selectable "UP" Axis (X, Y, or Z).
