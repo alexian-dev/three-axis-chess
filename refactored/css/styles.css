@@ -1,6 +1,6 @@
 html,
 body {
-  touch-action: none;
+  touch-action: auto;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
@@ -24,6 +24,8 @@ body {
   #start-game-button {
     padding: 14px 10vw;
     font-size: 1.2em;
+    position: sticky;
+    bottom: 20px;
   }
   #info {
     font-size: 0.95em;
@@ -57,7 +59,9 @@ body {
   left: 0;
   width: 100vw;
   min-height: 100vh;
+
   background-color: rgba(173, 216, 230, 0.95);
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -116,14 +120,18 @@ body {
   border-color: #7ab8f0;
 }
 #start-game-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   background-color: #4caf50;
   border: none;
   color: white;
-  margin-top: 25px;
-  padding: 15px 40px;
+  padding: 12px 30px;
   font-size: 1.1em;
   font-weight: bold;
   letter-spacing: 0.5px;
+  position: sticky;
+  bottom: 20px;
 }
 #start-game-button:hover {
   background-color: #5cb860;
