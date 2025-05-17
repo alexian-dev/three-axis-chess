@@ -118,11 +118,13 @@ body {
   border-color: #7ab8f0;
 }
 #start-game-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   background-color: #4caf50;
   border: none;
   color: white;
-  margin-top: 25px;
-  padding: 15px 40px;
+  padding: 12px 30px;
   font-size: 1.1em;
   font-weight: bold;
   letter-spacing: 0.5px;
