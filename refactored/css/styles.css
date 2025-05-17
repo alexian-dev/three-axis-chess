@@ -56,8 +56,8 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.95);
+  min-height: 100vh;
+  background-color: rgba(173, 216, 230, 0.95);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -66,6 +66,14 @@ body {
   text-align: center;
   padding: 20px;
   overflow-y: auto;
+  touch-action: auto;
+}
+
+@media (max-height: 600px) {
+  #setup-overlay {
+    justify-content: flex-start;
+    padding-top: 40px;
+  }
 }
 #setup-overlay h1 {
   margin-bottom: 15px;
