@@ -66,7 +66,7 @@
         top: 0;
         left: 0;
         width: 100vw;
-        height: 100vh;
+        min-height: 100vh;
         background-color: rgba(0, 0, 0, 0.95);
         display: flex;
         flex-direction: column;
@@ -76,6 +76,13 @@
         text-align: center;
         padding: 20px;
         overflow-y: auto;
+        touch-action: auto;
+      }
+      @media (max-height: 600px) {
+        #setup-overlay {
+          justify-content: flex-start;
+          padding-top: 40px;
+        }
       }
       #setup-overlay h1 {
         margin-bottom: 15px;
@@ -118,11 +125,13 @@
         border-color: #7ab8f0;
       }
       #start-game-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
         background-color: #4caf50;
         border: none;
         color: white;
-        margin-top: 25px;
-        padding: 15px 40px;
+        padding: 12px 30px;
         font-size: 1.1em;
         font-weight: bold;
         letter-spacing: 0.5px;
