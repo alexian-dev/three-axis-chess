@@ -68,7 +68,7 @@ const MATERIALS = {
     opacity: 0.3,
     side: THREE.DoubleSide,
   }),
-  AXIS_LABEL: new THREE.MeshBasicMaterial({ color: 0xeeeeee }),
+  AXIS_LABEL: new THREE.MeshBasicMaterial({ color: 0x111111 }),
   GRID_LOW: new THREE.LineBasicMaterial({
     color: 0xaaaaaa,
     transparent: true,
