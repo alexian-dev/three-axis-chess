@@ -85,5 +85,5 @@ This is a chess *variant*. While inspired by standard chess, the 3D movement cha
 
 *   AI is very basic (Random/Greedy).
 *   Performance may degrade with complex AI or very large numbers of visual elements in future development.
-*   Limited mobile optimization (basic tap interaction is supported).
+*   Limited mobile optimization (tap interaction improved).
 *   Random piece placement might occasionally fail if board height is very low and density is high.
