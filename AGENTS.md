@@ -26,3 +26,5 @@ When creating a pull request, include:
 
 - Do not introduce new dependencies or complex build tools without prior discussion.
 - Note any TODOs or follow-up work directly in comments within the code.
+- When modifying the game, update both the single-page `3dchess20.html` file
+  and the `refactored` version so they remain in sync.
