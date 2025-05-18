@@ -1111,13 +1111,18 @@ function setupAxisLabels() {
 function setupInteraction() {
   window.addEventListener("resize", onWindowResize, false);
   renderer.domElement.addEventListener("click", onClick, false);
-  renderer.domElement.addEventListener(
-    "touchstart",
-    (e) => {
-      if (e.touches.length === 1) onClick(e.touches[0]);
-    },
-    false,
-  );
+  renderer.domElement.addEventListener("touchstart", handleTap, false);
+}
+
+function handleTap(e) {
+  if (e.touches.length === 1) {
+    const t = e.touches[0];
+    onClick({
+      clientX: t.clientX,
+      clientY: t.clientY,
+      preventDefault: () => e.preventDefault(),
+    });
+  }
 }
 function onWindowResize() {
   if (camera) {
