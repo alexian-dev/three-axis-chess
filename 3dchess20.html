@@ -1814,6 +1814,7 @@
         y,
         z,
         currentBoardState,
+        includeFriendly = false,
       ) {
         const moves = [];
         const { type, color, hasMoved } = pieceInfo;
@@ -1836,8 +1837,13 @@
             if (tP === null) {
               moves.push({ x: nx, y: ny, z: nz, isCapture: false });
             } else {
-              if (tP.color !== color) {
-                moves.push({ x: nx, y: ny, z: nz, isCapture: true });
+              if (tP.color !== color || includeFriendly) {
+                moves.push({
+                  x: nx,
+                  y: ny,
+                  z: nz,
+                  isCapture: tP.color !== color || includeFriendly,
+                });
               }
               break;
             }
@@ -1847,6 +1853,7 @@
           if (!isValidCoordinate(nX, nY, nZ)) return;
           const tP = getPAL(nX, nY, nZ);
           const iC = !!tP && tP.color !== color;
+          const iF = !!tP && tP.color === color;
           if (tP === null) {
             if (!iCO) {
               moves.push({
@@ -1857,7 +1864,7 @@
                 isEnPassant: iEP,
               });
             }
-          } else if (iC) {
+          } else if (iC || (includeFriendly && iF)) {
             moves.push({
               x: nX,
               y: nY,
@@ -1908,7 +1915,7 @@
                 nZ = z + d[2];
               if (isValidCoordinate(nX, nY, nZ)) {
                 const t = getPAL(nX, nY, nZ);
-                if (t !== null && t.color !== color) {
+                if (t !== null && (t.color !== color || includeFriendly)) {
                   moves.push({ x: nX, y: nY, z: nZ, isCapture: true });
                 }
               }
@@ -3008,6 +3015,7 @@
                 y_coord,
                 z_coord,
                 boardState,
+                true,
               );
 
               for (const cover of coveredSquares) {

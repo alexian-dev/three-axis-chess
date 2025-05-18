@@ -1403,7 +1403,14 @@ function copyBoardState(sBS) {
   }
   return nBS;
 }
-function _calculatePseudoLegalMoves(pieceInfo, x, y, z, currentBoardState) {
+function _calculatePseudoLegalMoves(
+  pieceInfo,
+  x,
+  y,
+  z,
+  currentBoardState,
+  includeFriendly = false,
+) {
   const moves = [];
   const { type, color, hasMoved } = pieceInfo;
   const getPAL = (lx, ly, lz) => {
@@ -1425,8 +1432,13 @@ function _calculatePseudoLegalMoves(pieceInfo, x, y, z, currentBoardState) {
       if (tP === null) {
         moves.push({ x: nx, y: ny, z: nz, isCapture: false });
       } else {
-        if (tP.color !== color) {
-          moves.push({ x: nx, y: ny, z: nz, isCapture: true });
+        if (tP.color !== color || includeFriendly) {
+          moves.push({
+            x: nx,
+            y: ny,
+            z: nz,
+            isCapture: tP.color !== color || includeFriendly,
+          });
         }
         break;
       }
@@ -1436,11 +1448,12 @@ function _calculatePseudoLegalMoves(pieceInfo, x, y, z, currentBoardState) {
     if (!isValidCoordinate(nX, nY, nZ)) return;
     const tP = getPAL(nX, nY, nZ);
     const iC = !!tP && tP.color !== color;
+    const iF = !!tP && tP.color === color;
     if (tP === null) {
       if (!iCO) {
         moves.push({ x: nX, y: nY, z: nZ, isCapture: false, isEnPassant: iEP });
       }
-    } else if (iC) {
+    } else if (iC || (includeFriendly && iF)) {
       moves.push({ x: nX, y: nY, z: nZ, isCapture: true, isEnPassant: iEP });
     }
   };
@@ -1482,7 +1495,7 @@ function _calculatePseudoLegalMoves(pieceInfo, x, y, z, currentBoardState) {
           nZ = z + d[2];
         if (isValidCoordinate(nX, nY, nZ)) {
           const t = getPAL(nX, nY, nZ);
-          if (t !== null && t.color !== color) {
+          if (t !== null && (t.color !== color || includeFriendly)) {
             moves.push({ x: nX, y: nY, z: nZ, isCapture: true });
           }
         }
@@ -2193,6 +2206,7 @@ function drawSupportLines() {
           y_coord,
           z_coord,
           boardState,
+          true,
         );
 
         for (const cover of coveredSquares) {
