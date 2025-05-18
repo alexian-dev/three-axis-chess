@@ -445,7 +445,8 @@ function playSound(type) {
 }
 function setupScene() {
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000000);
+  // Use a light background for better visibility
+  scene.background = new THREE.Color(0xf0f0f0);
   camera = new THREE.PerspectiveCamera(
     60,
     window.innerWidth / window.innerHeight,
