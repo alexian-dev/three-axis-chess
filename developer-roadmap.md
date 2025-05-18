@@ -1,8 +1,9 @@
-# 3D Voxel Chess - Developer Roadmap [Old version -- Gemini 2.5 Pro]
+# 3D Voxel Chess - Developer Roadmap
 
 ## Introduction
 
 This document outlines potential future development paths, improvements, and technical considerations for the single-page 3D Voxel Chess game. The current state provides a functional base with core gameplay, customizable setup, basic AI, and check/checkmate logic.
+The long‑term vision is to transform this project into a polished three‑axis chess experience with rich interaction and accessibility.
 
 ## Core Architecture Overview
 
@@ -70,6 +71,52 @@ This document outlines potential future development paths, improvements, and tec
 4.  **Hover Effects:**
     *   *Goal:* Pre-click feedback.
     *   *Tasks:* Implement `mousemove` listener with throttled raycasting. Apply subtle visual changes (color shift, slight scale) to hovered-over interactive objects (own pieces).
+
+### Phase 4: Online Play & Community
+
+1.  **Networked Multiplayer:**
+    *   *Goal:* Allow remote players to compete in real time.
+    *   *Tasks:* Implement a simple WebSocket protocol and lobby UI. Handle disconnections gracefully.
+    *   *Considerations:* Start with a minimal Node server; keep the message format lightweight.
+2.  **Spectator & Replay:**
+    *   *Goal:* Share games with others and review past matches.
+    *   *Tasks:* Stream board state to observers, log moves, and provide a playback interface.
+3.  **User Profiles & Ranking:**
+    *   *Goal:* Foster competition and track progress.
+    *   *Tasks:* Store win/loss records and calculate a simple rating. Use local storage initially.
+
+### Phase 5: Advanced Tools
+
+1.  **Game Save & Load:**
+    *   *Goal:* Resume unfinished games.
+    *   *Tasks:* Serialize game state to JSON and allow import/export. Consider PGN support for notation.
+2.  **Puzzle Mode:**
+    *   *Goal:* Offer tactical challenges.
+    *   *Tasks:* Provide predefined positions with hint and solution checking.
+3.  **Customization Options:**
+    *   *Goal:* Personalize the look and feel.
+    *   *Tasks:* Themeable board and pieces, gridline toggle, and sound volume settings.
+
+### Phase 6: Immersive Modes
+
+1.  **VR/AR Support:**
+    *   *Goal:* Experience the board in headsets or on mobile.
+    *   *Tasks:* Integrate WebXR for VR controls and experiment with AR placement.
+2.  **Multiple Camera Presets:**
+    *   *Goal:* Provide different perspectives.
+    *   *Tasks:* Quick switch between top-down, isometric, and first-person views.
+
+### Phase 7: Accessibility & Mobile
+
+1.  **Touch-First Controls:**
+    *   *Goal:* Improve play on phones and tablets.
+    *   *Tasks:* Larger UI elements and gesture handling.
+2.  **Keyboard Navigation:**
+    *   *Goal:* Allow full play with the keyboard.
+    *   *Tasks:* Selection via arrow keys and dedicated move shortcuts.
+3.  **Screen Reader Support:**
+    *   *Goal:* Basic accessibility for visually impaired players.
+    *   *Tasks:* Add ARIA labels and textual move announcements.
 
 ## Code Structure Notes
 
