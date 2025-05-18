@@ -22,6 +22,7 @@ This project implements a chess variant played on an 8x8xN grid within a 3D cube
 *   **AI Opponents:**
     *   Random Mover: Picks any legal move randomly.
     *   Greedy Mover: Picks the move leading to the best immediate material score.
+    *   Minimax (Depth 2): Searches one move ahead for both sides using a simple evaluation.
 *   **Gameplay Features:**
     *   Turn-based play.
     *   Piece selection and valid move highlighting.
