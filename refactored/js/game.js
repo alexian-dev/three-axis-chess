@@ -445,7 +445,7 @@ function playSound(type) {
 }
 function setupScene() {
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x506075);
+  scene.background = new THREE.Color(0x000000);
   camera = new THREE.PerspectiveCamera(
     60,
     window.innerWidth / window.innerHeight,
@@ -1110,6 +1110,13 @@ function setupAxisLabels() {
 function setupInteraction() {
   window.addEventListener("resize", onWindowResize, false);
   renderer.domElement.addEventListener("click", onClick, false);
+  renderer.domElement.addEventListener(
+    "touchstart",
+    (e) => {
+      if (e.touches.length === 1) onClick(e.touches[0]);
+    },
+    false,
+  );
 }
 function onWindowResize() {
   if (camera) {
