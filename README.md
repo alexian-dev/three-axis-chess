@@ -36,11 +36,12 @@ This project implements a chess variant played on an 8x8xN grid within a 3D cube
 
 ## How to Play / Run
 
-1.  Save the complete code as an HTML file (e.g., `3dchess_final.html`).
-2.  Ensure you have an internet connection (for loading Three.js and associated libraries via CDN).
-3.  Open the HTML file in a modern web browser that supports WebGL (Chrome, Firefox, Edge, Safari recommended).
-4.  Choose your desired setup options on the initial screen.
-5.  Click "Start Game".
+1.  Open `3dchess20.html` (single file) or `refactored/index.html` in a modern
+    web browser with WebGL support (Chrome, Firefox, Edge, Safari).
+2.  Ensure you have an internet connection to load Three.js and other libraries
+    from the CDN.
+3.  Choose your desired setup options on the initial screen.
+4.  Click **Start Game**.
 
 ## Controls
 
@@ -84,5 +85,5 @@ This is a chess *variant*. While inspired by standard chess, the 3D movement cha
 
 *   AI is very basic (Random/Greedy).
 *   Performance may degrade with complex AI or very large numbers of visual elements in future development.
-*   No specific mobile optimization.
+*   Limited mobile optimization (basic tap interaction is supported).
 *   Random piece placement might occasionally fail if board height is very low and density is high.
