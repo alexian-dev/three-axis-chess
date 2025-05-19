@@ -59,6 +59,7 @@ body {
   left: 0;
   width: 100vw;
   min-height: 100vh;
+  height: 100vh;
 
   /* Dark overlay for better contrast */
   background-color: rgba(0, 0, 0, 0.9);
@@ -78,6 +79,11 @@ body {
   #setup-overlay {
     justify-content: flex-start;
     padding-top: 40px;
+  }
+}
+@supports (height: 100dvh) {
+  #setup-overlay {
+    height: 100dvh;
   }
 }
 #setup-overlay h1 {
@@ -151,6 +157,11 @@ body {
   height: 100vh;
   display: none;
   touch-action: none;
+}
+@supports (height: 100dvh) {
+  #container {
+    height: 100dvh;
+  }
 }
 #info {
   position: absolute;
