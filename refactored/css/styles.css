@@ -59,7 +59,7 @@ body {
   left: 0;
   width: 100vw;
   min-height: 100vh;
-  height: 100vh;
+  height: auto;
 
   /* Dark overlay for better contrast */
   background-color: rgba(0, 0, 0, 0.9);
@@ -71,6 +71,7 @@ body {
   z-index: 10;
   text-align: center;
   padding: 20px;
+  padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
   overflow-y: auto;
   touch-action: auto;
 }
@@ -83,7 +84,7 @@ body {
 }
 @supports (height: 100dvh) {
   #setup-overlay {
-    height: 100dvh;
+    min-height: 100dvh;
   }
 }
 #setup-overlay h1 {
