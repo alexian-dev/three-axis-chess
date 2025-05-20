@@ -130,6 +130,20 @@ const MATERIALS = {
     roughness: 0.6,
     metalness: 0.1,
   }),
+  PIECE_STATE_THREATENING_WHITE: new THREE.MeshStandardMaterial({
+    color: 0x8888ff,
+    emissive: 0x6666ee,
+    emissiveIntensity: 0.5,
+    roughness: 0.6,
+    metalness: 0.1,
+  }),
+  PIECE_STATE_THREATENING_BLACK: new THREE.MeshStandardMaterial({
+    color: 0x6666dd,
+    emissive: 0x4444aa,
+    emissiveIntensity: 0.5,
+    roughness: 0.6,
+    metalness: 0.1,
+  }),
   CONFLICT_RAY_WHITE_ATTACKING: new THREE.MeshBasicMaterial({
     color: 0xff8800,
     transparent: true,
@@ -1269,7 +1283,11 @@ function applyPieceVisuals(mOG) {
     isOv = true;
   } else if (pUD.isThreatening) {
     storeOrig(mOG);
-    tBM = MATERIALS.PIECE_STATE_THREATENING.clone();
+    tBM = (
+      pC === COLORS.WHITE
+        ? MATERIALS.PIECE_STATE_THREATENING_WHITE
+        : MATERIALS.PIECE_STATE_THREATENING_BLACK
+    ).clone();
     isOv = true;
   } else {
     if (pUD.originalMaterial) {
