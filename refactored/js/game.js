@@ -86,6 +86,8 @@ const MATERIALS = {
   }),
   LABEL_WHITE: new THREE.MeshBasicMaterial({ color: 0x111111 }),
   LABEL_BLACK: new THREE.MeshBasicMaterial({ color: 0xeeeeee }),
+  LABEL_BORDER_LIGHT: new THREE.MeshBasicMaterial({ color: 0xffffff }),
+  LABEL_BORDER_DARK: new THREE.MeshBasicMaterial({ color: 0x000000 }),
   SUPPORT_LINE_WHITE: new THREE.MeshBasicMaterial({
     color: 0x88ff88,
     transparent: true,
@@ -956,6 +958,14 @@ function createPieceMesh(type, color, x, y, z, isGamePiece = true) {
       textGeo,
       color === COLORS.WHITE ? MATERIALS.LABEL_BLACK : MATERIALS.LABEL_WHITE,
     );
+    const borderGeo = textGeo.clone();
+    const borderMesh = new THREE.Mesh(
+      borderGeo,
+      color === COLORS.WHITE
+        ? MATERIALS.LABEL_BORDER_LIGHT
+        : MATERIALS.LABEL_BORDER_DARK,
+    );
+    borderMesh.scale.multiplyScalar(1.1);
     let pieceH = VOXEL_SIZE * scale;
     if (geometry instanceof THREE.BoxGeometry)
       pieceH = geometry.parameters.height;
@@ -975,6 +985,8 @@ function createPieceMesh(type, color, x, y, z, isGamePiece = true) {
       pieceH * 0.5 + (royalBaseMesh ? 0.05 : 0.1),
       0,
     );
+    borderMesh.position.copy(textMesh.position);
+    finalObject.add(borderMesh);
     finalObject.add(textMesh);
   }
   switch (gameState.upAxis) {
