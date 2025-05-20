@@ -472,14 +472,14 @@ function setupScene() {
     case "x":
       camera.position.set(
         gameState.maxHeight * 1.3,
-        BOARD_SIZE * 0.8,
+        -BOARD_SIZE * 0.8,
         BOARD_SIZE * 0.8,
       );
       break;
     case "z":
       camera.position.set(
         BOARD_SIZE * 0.8,
-        BOARD_SIZE * 0.8,
+        -BOARD_SIZE * 0.8,
         gameState.maxHeight * 1.2,
       );
       break;
@@ -488,7 +488,7 @@ function setupScene() {
       camera.position.set(
         BOARD_SIZE * 0.6,
         gameState.maxHeight * 1.2,
-        BOARD_SIZE * 1.0,
+        -BOARD_SIZE * 1.0,
       );
       break;
   }
