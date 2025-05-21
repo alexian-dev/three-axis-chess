@@ -187,6 +187,8 @@ let gameState = {
   currentPlayer: COLORS.WHITE,
   gameStatus: "waiting",
   lastMove: null,
+  moveHistory: [],
+  showMoveLog: true,
   kingPositions: { [COLORS.WHITE]: null, [COLORS.BLACK]: null },
   selectedSetupType: "low",
   upAxis: "y",
@@ -235,6 +237,8 @@ function startGame() {
     document.getElementById("show-support-lines").checked;
   gameState.showConflictRays =
     document.getElementById("show-conflict-rays").checked;
+  gameState.showMoveLog =
+    document.getElementById("show-move-log").checked;
   const mhInput = document.getElementById("max-height-input");
   let hVal = parseInt(mhInput.value, 10);
   if (isNaN(hVal) || hVal < 2 || hVal > 8) {
@@ -245,6 +249,7 @@ function startGame() {
   document.getElementById("setup-overlay").style.display = "none";
   document.getElementById("container").style.display = "block";
   document.getElementById("info").style.display = "block";
+  updateMoveLog();
   init();
 }
 function loadFontAndStart() {
@@ -608,11 +613,13 @@ function setupBoardState() {
   gridHelperMeshes.forEach((m) => scene.remove(m));
   gridHelperMeshes = [];
   gameState.lastMove = null;
+  gameState.moveHistory = [];
   gameState.kingPositions = { [COLORS.WHITE]: null, [COLORS.BLACK]: null };
   gameState.currentPlayer = COLORS.WHITE;
   gameState.isAiTurn = false;
   selectedPiece = null;
   clearHighlights();
+  updateMoveLog();
 }
 function setupInitialPieces() {
   let whiteHeight, blackHeight;
@@ -1884,6 +1891,8 @@ function movePiece(fX, fY, fZ, tX, tY, tZ, iEP = false) {
       skipped: null,
     };
   }
+  recordMove(mPI, { x: fX, y: fY, z: fZ }, { x: tX, y: tY, z: tZ }, !!cPD);
+  updateMoveLog();
   const iTSJ = !!tSA;
   handlePromotion(mPI, tX, tY, tZ, iTSJ);
   gameState.currentPlayer =
@@ -2098,6 +2107,35 @@ function updateInfoPanel() {
     gameState.gameStatus === "stalemate"
       ? "#ff8888"
       : "#ffffff";
+}
+function gridToNotation(x, y, z) {
+  const lX = ["A", "B", "C", "D", "E", "F", "G", "H"],
+    lY = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"],
+    lZ = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  return `${lX[x]}${lZ[z]}-${lY[y]}`;
+}
+function recordMove(piece, from, to, capture) {
+  const pN = piece.type.charAt(0).toUpperCase();
+  const entry =
+    `${pN} ${gridToNotation(from.x, from.y, from.z)}→` +
+    `${gridToNotation(to.x, to.y, to.z)}` +
+    (capture ? " x" : "");
+  gameState.moveHistory.push(entry);
+  if (gameState.moveHistory.length > 20) gameState.moveHistory.shift();
+}
+function updateMoveLog() {
+  const logEl = document.getElementById("move-log");
+  if (!logEl) return;
+  logEl.style.display = gameState.showMoveLog ? "block" : "none";
+  if (!gameState.showMoveLog) return;
+  const ul = document.createElement("ul");
+  gameState.moveHistory.forEach((m) => {
+    const li = document.createElement("li");
+    li.textContent = m;
+    ul.appendChild(li);
+  });
+  logEl.innerHTML = "";
+  logEl.appendChild(ul);
 }
 function clearGhostLines() {
   ghostLines.forEach((l) => scene.remove(l));
