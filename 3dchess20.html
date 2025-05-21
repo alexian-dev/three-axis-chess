@@ -198,6 +198,28 @@
         color: #ff8888;
         font-weight: bold;
       }
+      #move-log {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        max-height: 40vh;
+        overflow-y: auto;
+        background: rgba(15, 20, 30, 0.85);
+        padding: 12px 18px;
+        border-radius: 8px;
+        border: 1px solid rgba(100, 120, 150, 0.5);
+        font-size: 0.9em;
+        display: none;
+        z-index: 5;
+      }
+      #move-log ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      #move-log li {
+        margin-bottom: 4px;
+      }
       canvas {
         display: block;
         cursor: pointer;
@@ -326,6 +348,15 @@
           />
           <label for="show-conflict-rays">Show Conflict Rays</label>
         </div>
+        <div style="margin-top: 5px">
+          <input
+            type="checkbox"
+            id="show-move-log"
+            name="show-move-log"
+            checked
+          />
+          <label for="show-move-log">Show Move Log</label>
+        </div>
       </div>
       <button id="start-game-button">Start Game</button>
     </div>
@@ -337,6 +368,7 @@
       <div>Black Material: <span id="black-score">0</span></div>
       <div>Status: <span id="status">Waiting...</span></div>
     </div>
+    <div id="move-log"></div>
 
     <script>
       document.addEventListener(
@@ -549,11 +581,13 @@
       let conflictRayMeshes = [];
       let conflictRayHash = new Set();
       let helvetikerFont = null;
-      let gameState = {
-        currentPlayer: COLORS.WHITE,
-        gameStatus: "waiting",
-        lastMove: null,
-        kingPositions: { [COLORS.WHITE]: null, [COLORS.BLACK]: null },
+        let gameState = {
+          currentPlayer: COLORS.WHITE,
+          gameStatus: "waiting",
+          lastMove: null,
+          moveHistory: [],
+          showMoveLog: true,
+          kingPositions: { [COLORS.WHITE]: null, [COLORS.BLACK]: null },
         selectedSetupType: "low",
         upAxis: "y",
         opponentType: "human",
@@ -602,6 +636,8 @@
           document.getElementById("show-support-lines").checked;
         gameState.showConflictRays =
           document.getElementById("show-conflict-rays").checked;
+        gameState.showMoveLog =
+          document.getElementById("show-move-log").checked;
         const mhInput = document.getElementById("max-height-input");
         let hVal = parseInt(mhInput.value, 10);
         if (isNaN(hVal) || hVal < 2 || hVal > 8) {
@@ -612,6 +648,7 @@
         document.getElementById("setup-overlay").style.display = "none";
         document.getElementById("container").style.display = "block";
         document.getElementById("info").style.display = "block";
+        updateMoveLog();
         init();
       }
       function loadFontAndStart() {
@@ -978,6 +1015,7 @@
         gridHelperMeshes.forEach((m) => scene.remove(m));
         gridHelperMeshes = [];
         gameState.lastMove = null;
+        gameState.moveHistory = [];
         gameState.kingPositions = {
           [COLORS.WHITE]: null,
           [COLORS.BLACK]: null,
@@ -986,6 +1024,7 @@
         gameState.isAiTurn = false;
         selectedPiece = null;
         clearHighlights();
+        updateMoveLog();
       }
       function setupInitialPieces() {
         let whiteHeight, blackHeight;
@@ -2327,6 +2366,13 @@
             skipped: null,
           };
         }
+        recordMove(
+          mPI,
+          { x: fX, y: fY, z: fZ },
+          { x: tX, y: tY, z: tZ },
+          !!cPD,
+        );
+        updateMoveLog();
         const iTSJ = !!tSA;
         handlePromotion(mPI, tX, tY, tZ, iTSJ);
         gameState.currentPlayer =
@@ -2906,6 +2952,35 @@
           gameState.gameStatus === "stalemate"
             ? "#ff8888"
             : "#ffffff";
+      }
+      function gridToNotation(x, y, z) {
+        const lX = ["A", "B", "C", "D", "E", "F", "G", "H"],
+          lY = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"],
+          lZ = ["1", "2", "3", "4", "5", "6", "7", "8"];
+        return `${lX[x]}${lZ[z]}-${lY[y]}`;
+      }
+      function recordMove(piece, from, to, capture) {
+        const pN = piece.type.charAt(0).toUpperCase();
+        const entry =
+          `${pN} ${gridToNotation(from.x, from.y, from.z)}→` +
+          `${gridToNotation(to.x, to.y, to.z)}` +
+          (capture ? " x" : "");
+        gameState.moveHistory.push(entry);
+        if (gameState.moveHistory.length > 20) gameState.moveHistory.shift();
+      }
+      function updateMoveLog() {
+        const logEl = document.getElementById("move-log");
+        if (!logEl) return;
+        logEl.style.display = gameState.showMoveLog ? "block" : "none";
+        if (!gameState.showMoveLog) return;
+        const ul = document.createElement("ul");
+        gameState.moveHistory.forEach((m) => {
+          const li = document.createElement("li");
+          li.textContent = m;
+          ul.appendChild(li);
+        });
+        logEl.innerHTML = "";
+        logEl.appendChild(ul);
       }
       function clearGhostLines() {
         ghostLines.forEach((l) => scene.remove(l));

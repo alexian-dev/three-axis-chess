@@ -127,6 +127,15 @@
           />
           <label for="show-conflict-rays">Show Conflict Rays</label>
         </div>
+        <div style="margin-top: 5px">
+          <input
+            type="checkbox"
+            id="show-move-log"
+            name="show-move-log"
+            checked
+          />
+          <label for="show-move-log">Show Move Log</label>
+        </div>
       </div>
       <button id="start-game-button">Start Game</button>
     </div>
@@ -138,6 +147,7 @@
       <div>Black Material: <span id="black-score">0</span></div>
       <div>Status: <span id="status">Waiting...</span></div>
     </div>
+    <div id="move-log"></div>
     <script>
       document.addEventListener(
         "touchmove",
