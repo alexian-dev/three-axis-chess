@@ -705,7 +705,13 @@ function setupInitialPieces() {
       coords[heightAxis] >= maxHeight
     )
       return;
-    placePiece(type, COLORS.WHITE, coords.x, coords.y, coords.z);
+    placePiece(
+      type,
+      COLORS.WHITE,
+      coords[fileAxis],
+      coords[rankAxis],
+      coords[heightAxis],
+    );
   });
   for (let fileIndex = 0; fileIndex < BOARD_SIZE; fileIndex++) {
     const h = isRandomHeight
@@ -741,7 +747,13 @@ function setupInitialPieces() {
       }
       if (!found) console.warn("Could not place random white pawn");
     }
-    placePiece(PIECE_TYPES.PAWN, COLORS.WHITE, coords.x, coords.y, coords.z);
+    placePiece(
+      PIECE_TYPES.PAWN,
+      COLORS.WHITE,
+      coords[fileAxis],
+      coords[rankAxis],
+      coords[heightAxis],
+    );
   }
   backRankOrder.forEach((type, fileIndex) => {
     const h = isRandomHeight
@@ -759,7 +771,13 @@ function setupInitialPieces() {
       coords[heightAxis] >= maxHeight
     )
       return;
-    placePiece(type, COLORS.BLACK, coords.x, coords.y, coords.z);
+    placePiece(
+      type,
+      COLORS.BLACK,
+      coords[fileAxis],
+      coords[rankAxis],
+      coords[heightAxis],
+    );
   });
   for (let fileIndex = 0; fileIndex < BOARD_SIZE; fileIndex++) {
     const h = isRandomHeight
@@ -795,7 +813,13 @@ function setupInitialPieces() {
       }
       if (!found) console.warn("Could not place random black pawn");
     }
-    placePiece(PIECE_TYPES.PAWN, COLORS.BLACK, coords.x, coords.y, coords.z);
+    placePiece(
+      PIECE_TYPES.PAWN,
+      COLORS.BLACK,
+      coords[fileAxis],
+      coords[rankAxis],
+      coords[heightAxis],
+    );
   }
 }
 function placePiece(type, color, x, y, z) {
