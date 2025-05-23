@@ -193,7 +193,7 @@ body {
   position: absolute;
   top: 15px;
   right: 15px;
-  max-height: 40vh;
+  max-height: 30vh;
   overflow-y: auto;
   background: rgba(15, 20, 30, 0.85);
   padding: 12px 18px;
@@ -210,6 +210,27 @@ body {
 }
 #move-log li {
   margin-bottom: 4px;
+}
+#move-log::-webkit-scrollbar {
+  width: 6px;
+}
+#move-log::-webkit-scrollbar-track {
+  background: rgba(40, 40, 50, 0.4);
+  border-radius: 8px;
+}
+#move-log::-webkit-scrollbar-thumb {
+  background: rgba(180, 180, 200, 0.6);
+  border-radius: 8px;
+}
+#move-log span.white-move {
+  color: #ffffff;
+}
+#move-log span.black-move {
+  color: #ffe082;
+}
+#move-log span.move-num {
+  color: #cccccc;
+  margin-right: 4px;
 }
 canvas {
   display: block;
