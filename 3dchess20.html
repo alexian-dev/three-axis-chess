@@ -1508,27 +1508,13 @@
         };
       }
       function isValidCoordinate(x, y, z) {
-        const c = { x, y, z };
-        let hA = gameState.upAxis,
-          fA1,
-          fA2;
-        if (hA === "x") {
-          fA1 = "y";
-          fA2 = "z";
-        } else if (hA === "z") {
-          fA1 = "x";
-          fA2 = "y";
-        } else {
-          fA1 = "x";
-          fA2 = "z";
-        }
         return (
-          c[hA] >= 0 &&
-          c[hA] < gameState.maxHeight &&
-          c[fA1] >= 0 &&
-          c[fA1] < BOARD_SIZE &&
-          c[fA2] >= 0 &&
-          c[fA2] < BOARD_SIZE
+          x >= 0 &&
+          x < BOARD_SIZE &&
+          y >= 0 &&
+          y < BOARD_SIZE &&
+          z >= 0 &&
+          z < gameState.maxHeight
         );
       }
       function getPieceAt(x, y, z) {
