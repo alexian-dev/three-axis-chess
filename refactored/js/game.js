@@ -2116,12 +2116,15 @@ function gridToNotation(x, y, z) {
 }
 function recordMove(piece, from, to, capture) {
   const pN = piece.type.charAt(0).toUpperCase();
-  const entry =
-    `${pN} ${gridToNotation(from.x, from.y, from.z)}→` +
-    `${gridToNotation(to.x, to.y, to.z)}` +
-    (capture ? " x" : "");
+  const entry = {
+    color: piece.color,
+    text:
+      `${pN} ${gridToNotation(from.x, from.y, from.z)}→` +
+      `${gridToNotation(to.x, to.y, to.z)}` +
+      (capture ? " x" : ""),
+  };
   gameState.moveHistory.push(entry);
-  if (gameState.moveHistory.length > 20) gameState.moveHistory.shift();
+  if (gameState.moveHistory.length > 40) gameState.moveHistory.shift();
 }
 function updateMoveLog() {
   const logEl = document.getElementById("move-log");
@@ -2129,13 +2132,20 @@ function updateMoveLog() {
   logEl.style.display = gameState.showMoveLog ? "block" : "none";
   if (!gameState.showMoveLog) return;
   const ul = document.createElement("ul");
-  gameState.moveHistory.forEach((m) => {
+  for (let i = 0; i < gameState.moveHistory.length; i += 2) {
     const li = document.createElement("li");
-    li.textContent = m;
+    const mNum = Math.floor(i / 2) + 1;
+    const w = gameState.moveHistory[i];
+    const b = gameState.moveHistory[i + 1];
+    li.innerHTML =
+      `<span class="move-num">${mNum}.</span> ` +
+      (w ? `<span class="white-move">${w.text}</span>` : "") +
+      (b ? ` <span class="black-move">${b.text}</span>` : "");
     ul.appendChild(li);
-  });
+  }
   logEl.innerHTML = "";
   logEl.appendChild(ul);
+  logEl.scrollTop = logEl.scrollHeight;
 }
 function clearGhostLines() {
   ghostLines.forEach((l) => scene.remove(l));
