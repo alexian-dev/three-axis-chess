@@ -28,20 +28,23 @@ The long‑term vision is to transform this project into a polished three‑axis
 1.  **Distinct Voxel Piece Models:**
     *   *Goal:* Improve piece recognition and visual appeal.
     *   *Tasks:* Redesign King, Queen, Rook, Bishop, Knight, Pawn using `THREE.Group` and multiple `THREE.BoxGeometry` instances to create unique, simple voxel shapes. Consider subtle height/width differences. Remove text labels if models become clear enough.
-    *   *Resources:* Voxel art tools (MagicaVoxel) could help design shapes.
+    *   *Resources:* Voxel art tools (MagicaVoxel) could help design shapes. See `docs/starship-theme-prompts.md` for example starship-themed concepts.
 2.  **Smooth Piece Movement Animation:**
     *   *Goal:* Enhance game feel, provide visual path confirmation.
     *   *Tasks:* Implement tweening for piece movement in `movePiece`. Update piece `position` incrementally over time (e.g., 0.2-0.3 seconds) within the `animate` loop or using a library (like TWEEN.js - requires adding CDN). Manage animation state (e.g., `isMoving` flag in piece data).
     *   *Considerations:* Ensure animation doesn't interfere with turn logic or performance.
 3.  **Improved Highlighting:**
     *   *Selection:* Explore outline effects (`THREE.OutlinePass` with `EffectComposer`, or simulated outline), stronger emissive glow, or slight vertical offset.
-    *   *Valid Moves:* Replace spheres with semi-transparent voxel cubes or plane markers on the target square's "floor". Ensure capture highlights (if enabled) are distinct (color/shape).
+    *   *Valid Moves:* Replace spheres with semi-transparent voxel cubes or plane markers on the target square's "floor". Ensure capture highlights (if enabled) are distinct (color/shape). *(Basic distinct colors implemented)*
 4.  **Refined UI:**
     *   *Goal:* Better presentation of game state.
     *   *Tasks:* Improve CSS for `#info` panel (layout, fonts, clarity). Visually distinguish current player more clearly. Enhance captured piece display area (e.g., align better, maybe add material value indicators).
 5.  **Audio Polish:**
     *   *Goal:* More distinct and satisfying sounds.
     *   *Tasks:* Find/create better quality, short audio samples for move, capture, check, checkmate, select, invalid move. Load using Web Audio API `fetch` and `decodeAudioData`. Replace oscillator sounds. Add sound for promotion.
+6.  **Move Log (DONE):**
+    *   *Goal:* Track moves during play.
+    *   *Status:* Implemented as a toggleable scrollable list.
 
 ### Phase 2: Gameplay Enhancements
 
