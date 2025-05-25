@@ -1047,21 +1047,53 @@ function createPieceMesh(type, color, x, y, z, isGamePiece = true) {
   }
   return finalObject;
 }
-function gridToWorld(x, y, z) {
+function gridToWorld(file, rank, height) {
   const hH = gameState.maxHeight / 2.0;
-  return new THREE.Vector3(
-    (x - HALF_BOARD_XZ + 0.5) * VOXEL_SIZE,
-    (y - hH + 0.5) * VOXEL_SIZE,
-    (z - HALF_BOARD_XZ + 0.5) * VOXEL_SIZE,
-  );
+  switch (gameState.upAxis) {
+    case "x":
+      return new THREE.Vector3(
+        (height - hH + 0.5) * VOXEL_SIZE,
+        (rank - HALF_BOARD_XZ + 0.5) * VOXEL_SIZE,
+        (file - HALF_BOARD_XZ + 0.5) * VOXEL_SIZE,
+      );
+    case "z":
+      return new THREE.Vector3(
+        (file - HALF_BOARD_XZ + 0.5) * VOXEL_SIZE,
+        (rank - HALF_BOARD_XZ + 0.5) * VOXEL_SIZE,
+        (height - hH + 0.5) * VOXEL_SIZE,
+      );
+    case "y":
+    default:
+      return new THREE.Vector3(
+        (file - HALF_BOARD_XZ + 0.5) * VOXEL_SIZE,
+        (height - hH + 0.5) * VOXEL_SIZE,
+        (rank - HALF_BOARD_XZ + 0.5) * VOXEL_SIZE,
+      );
+  }
 }
 function worldToGrid(wP) {
   const hH = gameState.maxHeight / 2.0;
-  return {
-    x: Math.floor(wP.x / VOXEL_SIZE + HALF_BOARD_XZ),
-    y: Math.floor(wP.y / VOXEL_SIZE + hH),
-    z: Math.floor(wP.z / VOXEL_SIZE + HALF_BOARD_XZ),
-  };
+  switch (gameState.upAxis) {
+    case "x":
+      return {
+        x: Math.floor(wP.z / VOXEL_SIZE + HALF_BOARD_XZ),
+        y: Math.floor(wP.y / VOXEL_SIZE + HALF_BOARD_XZ),
+        z: Math.floor(wP.x / VOXEL_SIZE + hH),
+      };
+    case "z":
+      return {
+        x: Math.floor(wP.x / VOXEL_SIZE + HALF_BOARD_XZ),
+        y: Math.floor(wP.y / VOXEL_SIZE + HALF_BOARD_XZ),
+        z: Math.floor(wP.z / VOXEL_SIZE + hH),
+      };
+    case "y":
+    default:
+      return {
+        x: Math.floor(wP.x / VOXEL_SIZE + HALF_BOARD_XZ),
+        y: Math.floor(wP.z / VOXEL_SIZE + HALF_BOARD_XZ),
+        z: Math.floor(wP.y / VOXEL_SIZE + hH),
+      };
+  }
 }
 function isValidCoordinate(x, y, z) {
   return (
