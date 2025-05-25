@@ -29,6 +29,8 @@ This project implements a chess variant played on an 8x8xN grid within a 3D cube
     *   Optional highlighting for capture moves.
     *   Capture tracking and material score display.
     *   Visual display of captured pieces.
+    *   Optional move history log.
+    *   Attack line, support line, and conflict ray visualization modes.
     *   Basic audio feedback for actions.
 *   **User Interface:**
     *   Setup overlay to choose game options.
@@ -88,3 +90,7 @@ This is a chess *variant*. While inspired by standard chess, the 3D movement cha
 *   Performance may degrade with complex AI or very large numbers of visual elements in future development.
 *   Limited mobile optimization (tap interaction improved).
 *   Random piece placement might occasionally fail if board height is very low and density is high.
+
+## Additional Resources
+
+* Starship-themed piece model prompts are provided in [docs/starship-theme-prompts.md](docs/starship-theme-prompts.md).
