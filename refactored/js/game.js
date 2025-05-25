@@ -168,6 +168,22 @@ const PIECE_VALUES = {
 const CAPTURED_SCALE = 0.5;
 const CAPTURED_SPACING = VOXEL_SIZE * (CAPTURED_SCALE + 0.2);
 const AI_DELAY = 500;
+const STARSHIP_PROMPTS = {
+  [PIECE_TYPES.PAWN]:
+    "A small agile starfighter, sleek silver body with blue engine glow, resting on a flat maintenance pad under bright hangar lighting",
+  [PIECE_TYPES.ROOK]:
+    "A sturdy defensive turret, square base with armored plating, gun barrels pointing upward, illuminated by spotlights in a space station bay",
+  [PIECE_TYPES.KNIGHT]:
+    "A nimble interceptor spacecraft with swept wings and forward cockpit, matte gray hull with red trim, parked on a landing deck at dusk",
+  [PIECE_TYPES.BISHOP]:
+    "A long-range patrol cruiser with elongated body and twin engine nacelles, dark metallic finish with subtle green highlights, floating in open space",
+  [PIECE_TYPES.QUEEN]:
+    "A formidable command ship, wide hull with layered armor and glowing blue thrusters, featuring sleek antenna arrays, showcased under studio lighting",
+  [PIECE_TYPES.KING]:
+    "A massive capital ship, commanding bridge tower atop a reinforced hull, silver and gold accents, hovering above a space dock bathed in soft ambient light",
+};
+let pieceTextures = {};
+let pieceSpritesByType = {};
 
 let scene,
   camera,
@@ -189,6 +205,7 @@ let gameState = {
   lastMove: null,
   moveHistory: [],
   showMoveLog: true,
+  themedImages: false,
   kingPositions: { [COLORS.WHITE]: null, [COLORS.BLACK]: null },
   selectedSetupType: "low",
   upAxis: "y",
@@ -239,6 +256,8 @@ function startGame() {
     document.getElementById("show-conflict-rays").checked;
   gameState.showMoveLog =
     document.getElementById("show-move-log").checked;
+  gameState.themedImages =
+    document.getElementById("use-themed-images").checked;
   const mhInput = document.getElementById("max-height-input");
   let hVal = parseInt(mhInput.value, 10);
   if (isNaN(hVal) || hVal < 2 || hVal > 8) {
@@ -260,6 +279,7 @@ function loadFontAndStart() {
       helvetikerFont = font;
       setupInitialPieces();
       setupPieceMeshes();
+      if (gameState.themedImages) loadPieceTextures();
       setupAxisLabels();
       try {
         if (typeof THREE.OrbitControls === "undefined") {
@@ -308,6 +328,7 @@ function loadFontAndStart() {
       console.error("Font load failed:", err);
       setupInitialPieces();
       setupPieceMeshes();
+      if (gameState.themedImages) loadPieceTextures();
       try {
         if (typeof THREE.OrbitControls === "undefined") {
           throw new Error("OrbitControls script not loaded.");
@@ -370,6 +391,15 @@ function loadFontAndStart() {
     confRaysCb.addEventListener("change", (e) => {
       gameState.showConflictRays = e.target.checked;
       drawConflictRays();
+    });
+  }
+  const themeCb = document.getElementById("use-themed-images");
+  if (themeCb) {
+    themeCb.checked = gameState.themedImages;
+    themeCb.addEventListener("change", (e) => {
+      gameState.themedImages = e.target.checked;
+      if (gameState.themedImages) loadPieceTextures();
+      else clearPieceTextures();
     });
   }
 }
@@ -1020,6 +1050,19 @@ function createPieceMesh(type, color, x, y, z, isGamePiece = true) {
     finalObject.add(borderMesh);
     finalObject.add(textMesh);
   }
+  if (gameState.themedImages) {
+    const spriteMaterial = new THREE.SpriteMaterial({ color: 0xffffff });
+    const sprite = new THREE.Sprite(spriteMaterial);
+    sprite.scale.set(VOXEL_SIZE, VOXEL_SIZE, 1);
+    sprite.position.set(0, VOXEL_SIZE * scale, 0);
+    finalObject.add(sprite);
+    if (!pieceSpritesByType[type]) pieceSpritesByType[type] = [];
+    pieceSpritesByType[type].push(sprite);
+    if (pieceTextures[type]) {
+      sprite.material.map = pieceTextures[type];
+      sprite.material.needsUpdate = true;
+    }
+  }
   switch (gameState.upAxis) {
     case "x":
       finalObject.rotation.set(0, 0, -Math.PI / 2);
@@ -1094,6 +1137,32 @@ function worldToGrid(wP) {
         z: Math.floor(wP.y / VOXEL_SIZE + hH),
       };
   }
+}
+function loadPieceTextures() {
+  const loader = new THREE.TextureLoader();
+  Object.keys(STARSHIP_PROMPTS).forEach((type) => {
+    const url =
+      "https://image.pollinations.ai/prompt/" +
+      encodeURIComponent(STARSHIP_PROMPTS[type]);
+    loader.load(url, (texture) => {
+      pieceTextures[type] = texture;
+      const sprites = pieceSpritesByType[type] || [];
+      sprites.forEach((s) => {
+        s.material.map = texture;
+        s.material.needsUpdate = true;
+        s.visible = true;
+      });
+    });
+  });
+}
+function clearPieceTextures() {
+  Object.values(pieceSpritesByType).forEach((sprites) => {
+    sprites.forEach((s) => {
+      s.material.map = null;
+      s.material.needsUpdate = true;
+      s.visible = false;
+    });
+  });
 }
 function isValidCoordinate(x, y, z) {
   return (
