@@ -182,8 +182,23 @@ const STARSHIP_PROMPTS = {
   [PIECE_TYPES.KING]:
     "A massive capital ship, commanding bridge tower atop a reinforced hull, silver and gold accents, hovering above a space dock bathed in soft ambient light",
 };
+const PILOT_PROMPTS = {
+  [PIECE_TYPES.PAWN]:
+    "A young starfighter cadet with visor helmet and hopeful smile, blue flight suit, digital painting",
+  [PIECE_TYPES.ROOK]:
+    "A stern garrison commander in heavy armor, square jaw, dark grey uniform, cinematic lighting",
+  [PIECE_TYPES.KNIGHT]:
+    "A daring interceptor pilot with a confident grin, red-trimmed suit, windswept hair",
+  [PIECE_TYPES.BISHOP]:
+    "A calm tactical officer with subtle cybernetic implants and long coat, cool green tones",
+  [PIECE_TYPES.QUEEN]:
+    "A regal ace pilot with poised expression, gold‑trimmed suit, soft studio glow",
+  [PIECE_TYPES.KING]:
+    "A seasoned admiral with scars and authoritative gaze, decorated uniform, dramatic lighting",
+};
 let pieceTextures = {};
-let pieceSpritesByType = {};
+let pilotTextures = {};
+let pilotSpritesByType = {};
 
 let scene,
   camera,
@@ -279,7 +294,10 @@ function loadFontAndStart() {
       helvetikerFont = font;
       setupInitialPieces();
       setupPieceMeshes();
-      if (gameState.themedImages) loadPieceTextures();
+      if (gameState.themedImages) {
+        loadPieceTextures();
+        loadPilotTextures();
+      }
       setupAxisLabels();
       try {
         if (typeof THREE.OrbitControls === "undefined") {
@@ -328,7 +346,10 @@ function loadFontAndStart() {
       console.error("Font load failed:", err);
       setupInitialPieces();
       setupPieceMeshes();
-      if (gameState.themedImages) loadPieceTextures();
+      if (gameState.themedImages) {
+        loadPieceTextures();
+        loadPilotTextures();
+      }
       try {
         if (typeof THREE.OrbitControls === "undefined") {
           throw new Error("OrbitControls script not loaded.");
@@ -398,8 +419,12 @@ function loadFontAndStart() {
     themeCb.checked = gameState.themedImages;
     themeCb.addEventListener("change", (e) => {
       gameState.themedImages = e.target.checked;
-      if (gameState.themedImages) loadPieceTextures();
-      else clearPieceTextures();
+      if (gameState.themedImages) {
+        loadPieceTextures();
+        loadPilotTextures();
+      } else {
+        clearPieceTextures();
+      }
     });
   }
 }
@@ -1006,6 +1031,18 @@ function createPieceMesh(type, color, x, y, z, isGamePiece = true) {
   }
   let finalObject = new THREE.Group();
   finalObject.add(baseMesh);
+  finalObject.userData.baseMesh = baseMesh;
+  if (gameState.themedImages && pieceTextures[type]) {
+    const applyTex = (o) => {
+      if (o instanceof THREE.Mesh && !(o.geometry instanceof THREE.TextGeometry)) {
+        o.material.map = pieceTextures[type];
+        o.material.needsUpdate = true;
+      } else if (o instanceof THREE.Group) {
+        o.children.forEach((c) => applyTex(c));
+      }
+    };
+    applyTex(baseMesh);
+  }
   if (royalBaseMesh) finalObject.add(royalBaseMesh);
   if (helvetikerFont && pieceLabel !== "?") {
     const textGeo = new THREE.TextGeometry(pieceLabel, {
@@ -1055,13 +1092,15 @@ function createPieceMesh(type, color, x, y, z, isGamePiece = true) {
     const sprite = new THREE.Sprite(spriteMaterial);
     sprite.scale.set(VOXEL_SIZE, VOXEL_SIZE, 1);
     sprite.position.set(0, VOXEL_SIZE * scale, 0);
+    sprite.visible = false;
     finalObject.add(sprite);
-    if (!pieceSpritesByType[type]) pieceSpritesByType[type] = [];
-    pieceSpritesByType[type].push(sprite);
-    if (pieceTextures[type]) {
-      sprite.material.map = pieceTextures[type];
+    if (!pilotSpritesByType[type]) pilotSpritesByType[type] = [];
+    pilotSpritesByType[type].push(sprite);
+    if (pilotTextures[type]) {
+      sprite.material.map = pilotTextures[type];
       sprite.material.needsUpdate = true;
     }
+    finalObject.userData.faceSprite = sprite;
   }
   switch (gameState.upAxis) {
     case "x":
@@ -1146,23 +1185,69 @@ function loadPieceTextures() {
       encodeURIComponent(STARSHIP_PROMPTS[type]);
     loader.load(url, (texture) => {
       pieceTextures[type] = texture;
-      const sprites = pieceSpritesByType[type] || [];
+      pieceMeshes.forEach((m) => {
+        if (m.userData && m.userData.type === parseInt(type)) {
+          const base = m.userData.baseMesh;
+          const applyTex = (o) => {
+            if (
+              o instanceof THREE.Mesh &&
+              !(o.geometry instanceof THREE.TextGeometry)
+            ) {
+              o.material.map = texture;
+              o.material.needsUpdate = true;
+            } else if (o instanceof THREE.Group) {
+              o.children.forEach((c) => applyTex(c));
+            }
+          };
+          if (base) applyTex(base);
+        }
+      });
+    });
+  });
+}
+function loadPilotTextures() {
+  const loader = new THREE.TextureLoader();
+  Object.keys(PILOT_PROMPTS).forEach((type) => {
+    const url =
+      "https://image.pollinations.ai/prompt/" +
+      encodeURIComponent(PILOT_PROMPTS[type]);
+    loader.load(url, (texture) => {
+      pilotTextures[type] = texture;
+      const sprites = pilotSpritesByType[type] || [];
       sprites.forEach((s) => {
         s.material.map = texture;
         s.material.needsUpdate = true;
-        s.visible = true;
       });
     });
   });
 }
 function clearPieceTextures() {
-  Object.values(pieceSpritesByType).forEach((sprites) => {
+  pieceMeshes.forEach((m) => {
+    const base = m.userData.baseMesh;
+    if (base) {
+      const clearMap = (o) => {
+        if (
+          o instanceof THREE.Mesh &&
+          !(o.geometry instanceof THREE.TextGeometry)
+        ) {
+          o.material.map = null;
+          o.material.needsUpdate = true;
+        } else if (o instanceof THREE.Group) {
+          o.children.forEach((c) => clearMap(c));
+        }
+      };
+      clearMap(base);
+    }
+  });
+  Object.values(pilotSpritesByType).forEach((sprites) => {
     sprites.forEach((s) => {
       s.material.map = null;
       s.material.needsUpdate = true;
       s.visible = false;
     });
   });
+  pieceTextures = {};
+  pilotTextures = {};
 }
 function isValidCoordinate(x, y, z) {
   return (
@@ -1466,6 +1551,13 @@ function applyPieceVisuals(mOG) {
     }
   };
   applyMat(mOG, tBM, tBsM);
+  if (pUD.faceSprite) {
+    if (pilotTextures[pI.type]) {
+      pUD.faceSprite.material.map = pilotTextures[pI.type];
+      pUD.faceSprite.material.needsUpdate = true;
+    }
+    pUD.faceSprite.visible = iCSel || pUD.isUnderAttack || pUD.isThreatening;
+  }
 }
 function updateAllPieceTacticalVisuals() {
   if (!boardState || pieceMeshes.length === 0) return;
