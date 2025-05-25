@@ -91,6 +91,15 @@ This is a chess *variant*. While inspired by standard chess, the 3D movement cha
 *   Limited mobile optimization (tap interaction improved).
 *   Random piece placement might occasionally fail if board height is very low and density is high.
 
+
+## Future Ideas
+
+The project may evolve to include a story mode where pieces speak as the match progresses. The move log could display short dialog lines such as "Pawn - \"Captain, we're moving in uncertain waters here\"" and "Queen - \"Pull back boys, I'm going deep\"." A simple scripted version would come first, with optional language model integration for dynamic conversations and branching narratives. Capture events might later trigger small animation effects.
+
+See `developer-roadmap.md` for more details.
+=======
+
 ## Additional Resources
 
 * Starship-themed piece model prompts are provided in [docs/starship-theme-prompts.md](docs/starship-theme-prompts.md).
+

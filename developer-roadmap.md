@@ -121,6 +121,18 @@ The long‑term vision is to transform this project into a polished three‑axis
     *   *Goal:* Basic accessibility for visually impaired players.
     *   *Tasks:* Add ARIA labels and textual move announcements.
 
+### Phase 8: Storytelling & Narrative
+
+1.  **Character Dialog System:**
+    *   *Goal:* Add personality through short spoken lines.
+    *   *Tasks:* Transform the move log into a dialog log with scripted lines for each piece. Allow toggling this mode on or off.
+    *   *Future:* Integrate a language model to generate dynamic conversations and branching storylines as the game progresses.
+
+2.  **Attack Animations:**
+    *   *Goal:* Make captures visually impactful.
+    *   *Tasks:* Add simple particle or sprite effects for attacks, expanding to more elaborate animations in the story version.
+
+
 ## Code Structure Notes
 
 *   The single-file structure is reaching its limit. Consider breaking down JS into modules (e.g., `gameState.js`, `ui.js`, `ai.js`, `rendering.js`, `rules.js`) if further major features are added. This would require a build step or changing the distribution method.
