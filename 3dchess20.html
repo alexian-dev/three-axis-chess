@@ -596,33 +596,21 @@
       const CAPTURED_SCALE = 0.5;
       const CAPTURED_SPACING = VOXEL_SIZE * (CAPTURED_SCALE + 0.2);
       const AI_DELAY = 500;
-      const STARSHIP_PROMPTS = {
-        [PIECE_TYPES.PAWN]:
-          "A small agile starfighter, sleek silver body with blue engine glow, resting on a flat maintenance pad under bright hangar lighting",
-        [PIECE_TYPES.ROOK]:
-          "A sturdy defensive turret, square base with armored plating, gun barrels pointing upward, illuminated by spotlights in a space station bay",
-        [PIECE_TYPES.KNIGHT]:
-          "A nimble interceptor spacecraft with swept wings and forward cockpit, matte gray hull with red trim, parked on a landing deck at dusk",
-        [PIECE_TYPES.BISHOP]:
-          "A long-range patrol cruiser with elongated body and twin engine nacelles, dark metallic finish with subtle green highlights, floating in open space",
-        [PIECE_TYPES.QUEEN]:
-          "A formidable command ship, wide hull with layered armor and glowing blue thrusters, featuring sleek antenna arrays, showcased under studio lighting",
-        [PIECE_TYPES.KING]:
-          "A massive capital ship, commanding bridge tower atop a reinforced hull, silver and gold accents, hovering above a space dock bathed in soft ambient light",
+      const STARSHIP_IMAGES = {
+        [PIECE_TYPES.PAWN]: "assets/starship/pieces/P.svg",
+        [PIECE_TYPES.ROOK]: "assets/starship/pieces/R.svg",
+        [PIECE_TYPES.KNIGHT]: "assets/starship/pieces/N.svg",
+        [PIECE_TYPES.BISHOP]: "assets/starship/pieces/B.svg",
+        [PIECE_TYPES.QUEEN]: "assets/starship/pieces/Q.svg",
+        [PIECE_TYPES.KING]: "assets/starship/pieces/K.svg",
       };
-      const PILOT_PROMPTS = {
-        [PIECE_TYPES.PAWN]:
-          "A young starfighter cadet with visor helmet and hopeful smile, blue flight suit, digital painting",
-        [PIECE_TYPES.ROOK]:
-          "A stern garrison commander in heavy armor, square jaw, dark grey uniform, cinematic lighting",
-        [PIECE_TYPES.KNIGHT]:
-          "A daring interceptor pilot with a confident grin, red-trimmed suit, windswept hair",
-        [PIECE_TYPES.BISHOP]:
-          "A calm tactical officer with subtle cybernetic implants and long coat, cool green tones",
-        [PIECE_TYPES.QUEEN]:
-          "A regal ace pilot with poised expression, gold‑trimmed suit, soft studio glow",
-        [PIECE_TYPES.KING]:
-          "A seasoned admiral with scars and authoritative gaze, decorated uniform, dramatic lighting",
+      const PILOT_IMAGES = {
+        [PIECE_TYPES.PAWN]: "assets/starship/pilots/P.svg",
+        [PIECE_TYPES.ROOK]: "assets/starship/pilots/R.svg",
+        [PIECE_TYPES.KNIGHT]: "assets/starship/pilots/N.svg",
+        [PIECE_TYPES.BISHOP]: "assets/starship/pilots/B.svg",
+        [PIECE_TYPES.QUEEN]: "assets/starship/pilots/Q.svg",
+        [PIECE_TYPES.KING]: "assets/starship/pilots/K.svg",
       };
       let pieceTextures = {};
       let pilotTextures = {};
@@ -1635,10 +1623,8 @@
       }
       function loadPieceTextures() {
         const loader = new THREE.TextureLoader();
-        loader.setCrossOrigin("anonymous");
-        Object.keys(STARSHIP_PROMPTS).forEach((type) => {
-          const cacheKey = "pieceTex_" + type;
-          const cached = localStorage.getItem(cacheKey);
+        Object.keys(STARSHIP_IMAGES).forEach((type) => {
+          const url = STARSHIP_IMAGES[type];
           const applyTex = (texture) => {
             pieceTextures[type] = texture;
             pieceMeshes.forEach((m) => {
@@ -1658,24 +1644,14 @@
                 if (base) apply(base);
               }
             });
-            cacheTexture(texture, cacheKey);
           };
-          if (cached) {
-            loader.load(cached, applyTex);
-          } else {
-            const url =
-              "https://image.pollinations.ai/prompt/" +
-              encodeURIComponent(STARSHIP_PROMPTS[type]);
-            loader.load(url, applyTex);
-          }
+          loader.load(url, applyTex);
         });
       }
       function loadPilotTextures() {
         const loader = new THREE.TextureLoader();
-        loader.setCrossOrigin("anonymous");
-        Object.keys(PILOT_PROMPTS).forEach((type) => {
-          const cacheKey = "pilotTex_" + type;
-          const cached = localStorage.getItem(cacheKey);
+        Object.keys(PILOT_IMAGES).forEach((type) => {
+          const url = PILOT_IMAGES[type];
           const applyTex = (texture) => {
             pilotTextures[type] = texture;
             const sprites = pilotSpritesByType[type] || [];
@@ -1683,30 +1659,9 @@
               s.material.map = texture;
               s.material.needsUpdate = true;
             });
-            cacheTexture(texture, cacheKey);
           };
-          if (cached) {
-            loader.load(cached, applyTex);
-          } else {
-            const url =
-              "https://image.pollinations.ai/prompt/" +
-              encodeURIComponent(PILOT_PROMPTS[type]);
-            loader.load(url, applyTex);
-          }
+          loader.load(url, applyTex);
         });
-      }
-      function cacheTexture(texture, key) {
-        try {
-          const canvas = document.createElement("canvas");
-          canvas.width = texture.image.width;
-          canvas.height = texture.image.height;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(texture.image, 0, 0);
-          const dataUrl = canvas.toDataURL("image/png");
-          localStorage.setItem(key, dataUrl);
-        } catch (e) {
-          console.warn("Texture cache failed", e);
-        }
       }
       function clearPieceTextures() {
         pieceMeshes.forEach((m) => {
