@@ -68,7 +68,7 @@ This project implements a chess variant played on an 8x8xN grid within a 3D cube
 *   **Board Height:** Sets the maximum coordinate value (exclusive) along the chosen "UP" axis (range 2-8). An 8x8x4 board would have `maxHeight = 4`.
 *   **Opponent:** Choose between playing against another human or a basic AI (Random or Greedy). AI currently plays Black.
 *   **Highlight Captures:** If checked, squares where a capture is possible will use a distinct red highlight marker.
-*   **Use Starship Images:** When enabled, piece sprites are loaded from the Pollinations service using the space-themed prompts in `docs/starship-theme-prompts.md`.
+*   **Use Starship Images:** When enabled, piece sprites are loaded from local placeholder images located in `assets/starship`. You can replace these SVG files with your own art.
 
 ## Rules Summary (Variant)
 
