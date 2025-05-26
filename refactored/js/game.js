@@ -199,6 +199,10 @@ const PILOT_PROMPTS = {
 let pieceTextures = {};
 let pilotTextures = {};
 let pilotSpritesByType = {};
+let themeLoaded = false;
+try {
+  themeLoaded = localStorage.getItem("themeLoaded") === "true";
+} catch (e) {}
 
 let scene,
   camera,
@@ -420,8 +424,7 @@ function loadFontAndStart() {
     themeCb.addEventListener("change", (e) => {
       gameState.themedImages = e.target.checked;
       if (gameState.themedImages) {
-        loadPieceTextures();
-        loadPilotTextures();
+        if (!themeLoaded) loadStarshipTheme();
       } else {
         clearPieceTextures();
       }
@@ -1179,16 +1182,16 @@ function worldToGrid(wP) {
 }
 function loadPieceTextures() {
   const loader = new THREE.TextureLoader();
+  loader.setCrossOrigin("anonymous");
   Object.keys(STARSHIP_PROMPTS).forEach((type) => {
-    const url =
-      "https://image.pollinations.ai/prompt/" +
-      encodeURIComponent(STARSHIP_PROMPTS[type]);
-    loader.load(url, (texture) => {
+    const cacheKey = "pieceTex_" + type;
+    const cached = localStorage.getItem(cacheKey);
+    const applyTex = (texture) => {
       pieceTextures[type] = texture;
       pieceMeshes.forEach((m) => {
         if (m.userData && m.userData.type === parseInt(type)) {
           const base = m.userData.baseMesh;
-          const applyTex = (o) => {
+          const apply = (o) => {
             if (
               o instanceof THREE.Mesh &&
               !(o.geometry instanceof THREE.TextGeometry)
@@ -1196,30 +1199,61 @@ function loadPieceTextures() {
               o.material.map = texture;
               o.material.needsUpdate = true;
             } else if (o instanceof THREE.Group) {
-              o.children.forEach((c) => applyTex(c));
+              o.children.forEach((c) => apply(c));
             }
           };
-          if (base) applyTex(base);
+          if (base) apply(base);
         }
       });
-    });
+      cacheTexture(texture, cacheKey);
+    };
+    if (cached) {
+      loader.load(cached, applyTex);
+    } else {
+      const url =
+        "https://image.pollinations.ai/prompt/" +
+        encodeURIComponent(STARSHIP_PROMPTS[type]);
+      loader.load(url, applyTex);
+    }
   });
 }
 function loadPilotTextures() {
   const loader = new THREE.TextureLoader();
+  loader.setCrossOrigin("anonymous");
   Object.keys(PILOT_PROMPTS).forEach((type) => {
-    const url =
-      "https://image.pollinations.ai/prompt/" +
-      encodeURIComponent(PILOT_PROMPTS[type]);
-    loader.load(url, (texture) => {
+    const cacheKey = "pilotTex_" + type;
+    const cached = localStorage.getItem(cacheKey);
+    const applyTex = (texture) => {
       pilotTextures[type] = texture;
       const sprites = pilotSpritesByType[type] || [];
       sprites.forEach((s) => {
         s.material.map = texture;
         s.material.needsUpdate = true;
       });
-    });
+      cacheTexture(texture, cacheKey);
+    };
+    if (cached) {
+      loader.load(cached, applyTex);
+    } else {
+      const url =
+        "https://image.pollinations.ai/prompt/" +
+        encodeURIComponent(PILOT_PROMPTS[type]);
+      loader.load(url, applyTex);
+    }
   });
+}
+function cacheTexture(texture, key) {
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = texture.image.width;
+    canvas.height = texture.image.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(texture.image, 0, 0);
+    const dataUrl = canvas.toDataURL("image/png");
+    localStorage.setItem(key, dataUrl);
+  } catch (e) {
+    console.warn("Texture cache failed", e);
+  }
 }
 function clearPieceTextures() {
   pieceMeshes.forEach((m) => {
@@ -1248,6 +1282,26 @@ function clearPieceTextures() {
   });
   pieceTextures = {};
   pilotTextures = {};
+}
+function loadStarshipTheme() {
+  if (!themeLoaded) {
+    loadPieceTextures();
+    loadPilotTextures();
+    themeLoaded = true;
+    try {
+      localStorage.setItem("themeLoaded", "true");
+    } catch (e) {
+      console.warn("Theme cache save failed:", e);
+    }
+    const btn = document.getElementById("load-theme-button");
+    if (btn) {
+      btn.textContent = "Starship Theme Loaded";
+      btn.disabled = true;
+    }
+  }
+  gameState.themedImages = true;
+  const cb = document.getElementById("use-themed-images");
+  if (cb) cb.checked = true;
 }
 function isValidCoordinate(x, y, z) {
   return (
@@ -2661,6 +2715,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("start-game-button")
     .addEventListener("click", startGame);
+  const ltBtn = document.getElementById("load-theme-button");
+  if (ltBtn) {
+    ltBtn.addEventListener("click", loadStarshipTheme);
+    if (themeLoaded) {
+      ltBtn.textContent = "Starship Theme Loaded";
+      ltBtn.disabled = true;
+    }
+  }
   if (!document.querySelector(".height-button.selected")) {
     document
       .querySelector('.height-button[data-setup="low"]')
