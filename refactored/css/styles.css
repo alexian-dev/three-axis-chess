@@ -52,12 +52,12 @@ body {
   color: #fff;
 }
 #setup-overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  min-height: 100vh;
-  height: auto;
+  height: 100vh;
+  height: 100svh;
 
   /* Dark overlay for better contrast */
   background-color: rgba(0, 0, 0, 0.9);
@@ -82,7 +82,7 @@ body {
 }
 @supports (height: 100dvh) {
   #setup-overlay {
-    min-height: 100dvh;
+    height: 100dvh;
   }
 }
 #setup-overlay h1 {
@@ -156,6 +156,7 @@ body {
 #container {
   width: 100vw;
   height: 100vh;
+  height: 100svh;
   display: none;
   touch-action: none;
 }

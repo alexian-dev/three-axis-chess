@@ -182,5 +182,26 @@
     <script src="https://unpkg.com/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
     <script src="js/game.js"></script>
     <script src="js/ai.js"></script>
+<script>
+  (function() {
+    if (!CSS.supports('height: 100svh')) {
+      const setVh = () => {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      };
+      const apply = () => {
+        const h = 'calc(var(--vh, 1vh) * 100)';
+        document.getElementById('setup-overlay').style.height = h;
+        const c = document.getElementById('container');
+        if (c) c.style.height = h;
+      };
+      setVh();
+      apply();
+      window.addEventListener('resize', () => {
+        setVh();
+        apply();
+      });
+    }
+  })();
+</script>
   </body>
 </html>
