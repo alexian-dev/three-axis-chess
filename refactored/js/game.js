@@ -168,6 +168,7 @@ const PIECE_VALUES = {
 const CAPTURED_SCALE = 0.5;
 const CAPTURED_SPACING = VOXEL_SIZE * (CAPTURED_SCALE + 0.2);
 const AI_DELAY = 500;
+const CHECK_REWARD = 1;
 const STARSHIP_IMAGES = {
   [PIECE_TYPES.PAWN]: "../assets/starship/pieces/P.svg",
   [PIECE_TYPES.ROOK]: "../assets/starship/pieces/R.svg",
@@ -229,6 +230,8 @@ let capturedByWhite = [];
 let capturedByBlack = [];
 let whiteScore = 0;
 let blackScore = 0;
+let whiteMeta = 0;
+let blackMeta = 0;
 let capturedWhiteDisplayMeshes = [];
 let capturedBlackDisplayMeshes = [];
 let selectedPiece = null;
@@ -650,6 +653,8 @@ function setupBoardState() {
   capturedByBlack = [];
   whiteScore = 0;
   blackScore = 0;
+  whiteMeta = 0;
+  blackMeta = 0;
   capturedWhiteDisplayMeshes.forEach((m) => scene.remove(m));
   capturedBlackDisplayMeshes.forEach((m) => scene.remove(m));
   capturedWhiteDisplayMeshes = [];
@@ -2137,9 +2142,11 @@ function handleCapture(cPD, cPP, cP) {
   const pV = PIECE_VALUES[cPD.type] || 0;
   if (cP === COLORS.WHITE) {
     whiteScore += pV;
+    whiteMeta += pV;
     capturedByWhite.push(cPD);
   } else {
     blackScore += pV;
+    blackMeta += pV;
     capturedByBlack.push(cPD);
   }
   updateCapturedDisplay();
@@ -2211,6 +2218,11 @@ function updateGameStatusAndCheckEnd() {
     } else {
       gameState.gameStatus = "check";
       playSound("check");
+      if (gameState.currentPlayer === COLORS.WHITE) {
+        blackMeta += CHECK_REWARD;
+      } else {
+        whiteMeta += CHECK_REWARD;
+      }
     }
   } else {
     const lM = getAllLegalMoves(gameState.currentPlayer);
@@ -2292,6 +2304,10 @@ function updateInfoPanel() {
   tS.style.color = gameState.currentPlayer === COLORS.WHITE ? "#eee" : "#aaa";
   document.getElementById("white-score").textContent = whiteScore;
   document.getElementById("black-score").textContent = blackScore;
+  const wm = document.getElementById("white-meta");
+  const bm = document.getElementById("black-meta");
+  if (wm) wm.textContent = whiteMeta;
+  if (bm) bm.textContent = blackMeta;
   const sS = document.getElementById("status");
   let sT = "";
   switch (gameState.gameStatus) {
