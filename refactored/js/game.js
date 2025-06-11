@@ -214,6 +214,7 @@ let gameState = {
   moveHistory: [],
   showMoveLog: true,
   themedImages: false,
+  spaceBackground: false,
   kingPositions: { [COLORS.WHITE]: null, [COLORS.BLACK]: null },
   selectedSetupType: "low",
   upAxis: "y",
@@ -268,6 +269,9 @@ function startGame() {
     document.getElementById("show-move-log").checked;
   gameState.themedImages =
     document.getElementById("use-themed-images").checked;
+  gameState.spaceBackground =
+    document.getElementById("space-background").checked;
+  document.body.classList.toggle("space-theme", gameState.spaceBackground);
   const mhInput = document.getElementById("max-height-input");
   let hVal = parseInt(mhInput.value, 10);
   if (isNaN(hVal) || hVal < 2 || hVal > 8) {
@@ -419,6 +423,14 @@ function loadFontAndStart() {
       } else {
         clearPieceTextures();
       }
+    });
+  }
+  const spaceBgCb = document.getElementById("space-background");
+  if (spaceBgCb) {
+    spaceBgCb.checked = gameState.spaceBackground;
+    spaceBgCb.addEventListener("change", (e) => {
+      gameState.spaceBackground = e.target.checked;
+      document.body.classList.toggle("space-theme", gameState.spaceBackground);
     });
   }
 }

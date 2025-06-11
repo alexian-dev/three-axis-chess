@@ -69,6 +69,7 @@ This project implements a chess variant played on an 8x8xN grid within a 3D cube
 *   **Opponent:** Choose between playing against another human or a basic AI (Random or Greedy). AI currently plays Black.
 *   **Highlight Captures:** If checked, squares where a capture is possible will use a distinct red highlight marker.
 *   **Use Starship Images:** When enabled, piece sprites are loaded from local placeholder images located in `assets/starship`. You can replace these SVG files with your own art.
+*   **Space Background:** When enabled, the page uses a starry background image.
 
 ## Rules Summary (Variant)
 
