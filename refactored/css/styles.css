@@ -51,6 +51,11 @@ body {
   background-color: #000;
   color: #fff;
 }
+body.space-theme {
+  background-image: url("../assets/starfield.svg");
+  background-repeat: repeat;
+  background-size: 50px 50px;
+}
 #setup-overlay {
   position: fixed;
   top: 0;
