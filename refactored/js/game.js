@@ -14,8 +14,8 @@ const MATERIALS = {
   /* ... Materials ... */
   [COLORS.WHITE]: new THREE.MeshStandardMaterial({
     color: 0xdddddd,
-    roughness: 0.7,
-    metalness: 0.1,
+    roughness: 0.4,
+    metalness: 0.4,
   }),
   [COLORS.BLACK]: new THREE.MeshStandardMaterial({
     color: 0x333333,
@@ -24,8 +24,8 @@ const MATERIALS = {
   }),
   ROYAL_WHITE: new THREE.MeshStandardMaterial({
     color: 0xfff8e1,
-    roughness: 0.5,
-    metalness: 0.2,
+    roughness: 0.3,
+    metalness: 0.5,
   }),
   ROYAL_BLACK: new THREE.MeshStandardMaterial({
     color: 0x404050,
@@ -34,8 +34,8 @@ const MATERIALS = {
   }),
   ROYAL_BASE_WHITE: new THREE.MeshStandardMaterial({
     color: 0xc0c0c0,
-    roughness: 0.4,
-    metalness: 0.3,
+    roughness: 0.2,
+    metalness: 0.6,
   }),
   ROYAL_BASE_BLACK: new THREE.MeshStandardMaterial({
     color: 0x504040,
